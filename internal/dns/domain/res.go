@@ -1,31 +1,39 @@
 package domain
 
-import "net"
-
-type Result struct {
-	Addresses []string
-	CNAME     string
-	MX        []*net.MX
-	NS        []*net.NS
-	SRV       []*net.SRV
-	TXT       []string
+func NewResult() Result {
+	return Result{
+		A:     make([]string, 0),
+		AAAA:  make([]string, 0),
+		CNAME: make([]string, 0),
+		MX:    make([]string, 0),
+		NS:    make([]string, 0),
+		SRV:   make([]string, 0),
+		TXT:   make([]string, 0),
+		SOA:   make([]string, 0),
+		CAA:   make([]string, 0),
+		PTR:   make([]string, 0),
+	}
 }
 
-func (r Result) IsEmpty() bool {
-	if len(r.Addresses) > 0 {
-		return false
-	}
-	if r.CNAME != "" {
-		return false
-	}
-	if len(r.MX) > 0 {
-		return false
-	}
-	if len(r.SRV) > 0 {
-		return false
-	}
-	if len(r.TXT) > 0 {
-		return false
-	}
-	return true
+type Result struct {
+	A        []string
+	AErr     string
+	AAAA     []string
+	AAAAErr  string
+	CNAME    []string
+	CNAMEErr string
+	MX       []string
+	MXErr    string
+	NS       []string
+	NSErr    string
+	SRV      []string
+	SRVErr   string
+	TXT      []string
+	TXTErr   string
+	SOA      []string
+	SOAErr   string
+	CAA      []string
+	CAAErr   string
+	PTR      []string
+	PTRErr   string
 }
