@@ -84,6 +84,11 @@ func doLookup(ctx context.Context, ns string, host string) (domain.Result, error
 		return result, err
 	}
 
+	// SPF
+	if result.SPF, result.SPFErr, err = lookupSPF(ctx, c, ns, host); err != nil {
+		return result, err
+	}
+
 	return result, nil
 }
 
@@ -286,6 +291,26 @@ func lookupPTR(ctx context.Context, c *dns.Client, ns, host string) ([]string, s
 			continue
 		}
 		res = append(res, record.Ptr)
+	}
+	sort.Strings(res)
+	return res, dns.RcodeToString[r.Rcode], nil
+}
+
+func lookupSPF(ctx context.Context, c *dns.Client, ns, host string) ([]string, string, error) {
+	res := make([]string, 0)
+
+	r, err := doRequest(ctx, c, ns, host, dns.TypeSPF)
+	if err != nil {
+		return res, "", fmt.Errorf("failed to lookup SPF: %w", err)
+	}
+	for _, a := range r.Answer {
+		record, ok := a.(*dns.SPF)
+		if !ok {
+			continue
+		}
+		for _, v := range record.Txt {
+			res = append(res, v)
+		}
 	}
 	sort.Strings(res)
 	return res, dns.RcodeToString[r.Rcode], nil

@@ -12,6 +12,7 @@ func NewResult() Result {
 		SOA:   make([]string, 0),
 		CAA:   make([]string, 0),
 		PTR:   make([]string, 0),
+		SPF:   make([]string, 0),
 	}
 }
 
@@ -36,4 +37,6 @@ type Result struct {
 	CAAErr   string
 	PTR      []string
 	PTRErr   string
+	SPF      []string
+	SPFErr   string
 }
